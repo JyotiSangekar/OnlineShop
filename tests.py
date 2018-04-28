@@ -12,15 +12,15 @@ class OnlineShopTezt(unittest.TestCase):
         user = "admin"
         pwd = "nollywood"        
         driver = self.driver
-        driver.get("http://127.0.0.1:8000/admin")
+        driver.get("http://127.0.0.1:8000/accounts/login/")
         # self.assertIn("Products", driver.title)
-        elem = driver.find_element_by_id("id_username")
+        elem = driver.find_element_by_id("id_login")
         elem.send_keys(user)
         elem = driver.find_element_by_id("id_password")
         elem.send_keys(pwd)
         elem.send_keys(Keys.RETURN)
-        driver.get("http://127.0.0.1:8000")
-        time.sleep(5)
+        # driver.get("http://127.0.0.1:8000")
+        time.sleep(8)
         assert "Logged In"
         driver.get("http://127.0.0.1:8000/1/panties/")
         elem = driver.find_element_by_xpath("/html/body/div[2]/div/form/input[3]").click()
