@@ -2,7 +2,10 @@ from decimal import Decimal
 from django.conf import settings
 from shop.models import Product
 from coupons.models import Coupon
-
+import taxjar
+from taxjar.response import TaxJarResponse
+from jsonobject import *
+import json
 
 class Cart(object):
 
@@ -84,11 +87,25 @@ class Cart(object):
     def get_total_price(self):
         return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values())
 
+    def get_total_tax(self):
+        # client = taxjar.Client(api_key='cc16b8b2f3fba39495891baf6a85e51c')
+        # rates = client.rates_for_location('90404-3370')
+        # # taxo = rates.to_json()
+        # taxobj = json.dumps(rates.to_json)
+        # taxobj1 = json.loads(taxobj)
+        # taxamount = taxobj1['TaxJarRate']['combined_rate'] * 100
+        return sum(Decimal(item['price']) * item['quantity'] for item in self.cart.values()) * Decimal(0.07)
+
+    # def rates_for_location(self, postal_code, location_deets=None):
+    #     """Shows the sales tax rates for a given location."""
+    #     request = self._get("rates/" + postal_code, location_deets)
+    #     return self.responder(request)
+
     def get_discount(self):
         if self.coupon:
             return (self.coupon.discount / Decimal('100')) * self.get_total_price()
         return Decimal('0')
 
     def get_total_price_after_discount(self):
-        return self.get_total_price() - self.get_discount()
+        return (self.get_total_price() - self.get_discount()) + self.get_total_tax()
     

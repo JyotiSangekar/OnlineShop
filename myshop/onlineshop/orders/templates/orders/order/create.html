@@ -12,7 +12,8 @@
         <h3>{% trans "Your order" %}</h3>
         <ul>
             {% for item in cart %}
-                <li>{{ item.quantity }}x {{ item.product.name }} <span>${{ item.total_price }}</span></li>
+                <li>{{ item.quantity }}x {{ item.product.name }} <span>${{ item.total_price }}</span>
+                </li>
             {% endfor %}
             {% if cart.coupon %}
                 <li>
@@ -23,12 +24,16 @@
                 </li>
             {% endif %}
         </ul>
+
+        <span> {% trans "Total Tax" %}: ${{ cart.get_total_tax|floatformat:"2" }} </span>
         <p>{% trans "Total" %}: ${{ cart.get_total_price_after_discount|floatformat:"2" }}</p>
-    </div>
+
+        </div>
+
 
     <form action="." method="post" class="order-form">
         {{ form.as_p }}
-        <p><input type="submit" value="Place order"></p>
+        <p><input type="submit" value="Place order" id="submit_order"></p>
         {% csrf_token %}
     </form>
 {% endblock %}
