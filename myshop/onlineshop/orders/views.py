@@ -4,6 +4,8 @@ from .forms import OrderCreateForm
 from .tasks import order_created
 from cart.cart import Cart
 from django.core.urlresolvers import reverse
+
+#import Requests
 # from django.contrib.auth.decorators import login_required
 
 # @login_required
@@ -19,10 +21,12 @@ def order_create(request):
             order.save()
 
             for item in cart:
+                #client = taxjar.Client(api_key='cc16b8b2f3fba39495891baf6a85e51c')
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
                                          price=item['price'],
-                                         quantity=item['quantity'])
+                                         quantity=item['quantity'],
+                                        )
             # clear the cart
             cart.clear()
             # launch asynchronous task
