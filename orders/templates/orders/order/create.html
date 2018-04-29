@@ -1,25 +1,29 @@
-{% extends "shop/base.html" %}
+{% extends "shop/base.html" %} {% load i18n %} {% block title %} {% trans "Checkout" %} {% endblock %} {% block content %}
+<h1>{% trans "Checkout" %}</h1>
 
-{% block title %}
-    Checkout
-{% endblock %}
+<div class="order-info">
+    <h3>{% trans "Your order" %}</h3>
+    <ul>
+        {% for item in cart %}
+        <li>{{ item.quantity }}x {{ item.product.name }} <span>${{ item.total_price }}</span>
+        </li>
+        {% endfor %} {% if cart.coupon %}
+        <li>
+            {% blocktrans with code=cart.coupon.code discount=cart.coupon.discount %} "{{ code }}" ({{ discount }}% off) {% endblocktrans %}
+            <span>- ${{ cart.get_discount|floatformat:"2" }}</span>
+        </li>
+        {% endif %}
+    </ul>
 
-{% block content %}
-    <h1>Checkout</h1>
+    <span> {% trans "Total Tax" %}: ${{ cart.get_total_tax|floatformat:"2" }} </span>
+    <p>{% trans "Total" %}: ${{ cart.get_total_price_after_discount|floatformat:"2" }}</p>
 
-    <div class="order-info">
-        <h3>Your order</h3>
-        <ul>
-            {% for item in cart %}
-                <li>{{ item.quantity }}x {{ item.product.name }} <span>${{ item.total_price }}</span></li>
-            {% endfor %}
-        </ul>
-        <p>Total: ${{ cart.get_total_price }}</p>
-    </div>
+</div>
 
-    <form action="." method="post" class="order-form">
-        {{ form.as_p }}
-        <p><input type="submit" value="Place order"></p>
-        {% csrf_token %}
-    </form>
+
+<form action="." method="post" class="order-form">
+    {{ form.as_p }}
+    <p><input type="submit" value="Place order" id="submit_order"></p>
+    {% csrf_token %}
+</form>
 {% endblock %}

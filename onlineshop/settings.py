@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrapform',
-    'account',
+    # 'account',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',    
     'shop',
     'cart',
     'orders',
@@ -73,11 +77,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'account.middleware.LocaleMiddleware',
-    'account.middleware.TimezoneMiddleware',
-    'account.middleware.ExpiredPasswordMiddleware',
+    # 'account.middleware.LocaleMiddleware',
+    # 'account.middleware.TimezoneMiddleware',
+    # 'account.middleware.ExpiredPasswordMiddleware',
 
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 
 ROOT_URLCONF = 'onlineshop.urls'
@@ -85,7 +97,7 @@ ROOT_URLCONF = 'onlineshop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,7 +106,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
-                'account.context_processors.account',
+                # 'account.context_processors.account',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
 
             ],
         },
@@ -182,7 +196,8 @@ SERVER_EMAIL = EMAIL_HOST_USER
 
 
 # django-paypal settings
-PAYPAL_RECEIVER_EMAIL = 'jyotisangekar@gmail.com'
+# PAYPAL_RECEIVER_EMAIL = 'jyotisangekar@gmail.com'
+PAYPAL_RECEIVER_EMAIL = 'apurvachimbili-facilitator@gmail.com'
 # PAYPAL_RECEIVER_EMAIL = 'ajibolaolayanju-merchant@hotmail.com'
 PAYPAL_TEST = True
 
@@ -196,6 +211,9 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'static'),
 )
 
+LOGIN_REDIRECT_URL = "/"
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS =True
+ACCOUNT_LOGOUT_REDIRECT_URL ="/"
 # Update database configuration with $DATABASE_URL.
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)

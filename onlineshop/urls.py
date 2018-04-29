@@ -26,7 +26,9 @@ urlpatterns = [
     url(r'^paypal/', include('paypal.standard.ipn.urls')),
     url(r'^payment/', include('payment.urls', namespace='payment')),
     url(r'^', include('shop.urls', namespace='shop')),
-    url(r'^account/', include('account.urls')),
+    # url(r'^account/', include('account.urls')),
+    url(r'^accounts/', include('allauth.urls')),
+
 
 
 ]
