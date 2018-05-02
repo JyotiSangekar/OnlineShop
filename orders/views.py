@@ -4,6 +4,7 @@ from .forms import OrderCreateForm
 from .tasks import order_created
 from cart.cart import Cart
 from django.core.urlresolvers import reverse
+from decimal import Decimal
 
 #import Requests
 # from django.contrib.auth.decorators import login_required
@@ -24,7 +25,7 @@ def order_create(request):
                 #client = taxjar.Client(api_key='cc16b8b2f3fba39495891baf6a85e51c')
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
-                                         price=item['price'],
+                                         price=Decimal(cart.get_total_price_after_discount()),
                                          quantity=item['quantity'],
                                         )
             # clear the cart
@@ -38,5 +39,4 @@ def order_create(request):
             #               {'order': order})
     else:
         form = OrderCreateForm()
-    return render(request, 'orders/order/create.html', {'cart': cart,
-                                                        'form': form})
+    return render(request, 'orders/order/create.html', {'cart': cart,'form': form})
